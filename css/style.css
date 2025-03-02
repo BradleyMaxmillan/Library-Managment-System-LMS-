@@ -1,13 +1,6 @@
 /* GENERAL */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
-/*
-html5doctor.com Reset Stylesheet
-v1.6.1
-Last Updated: 2010-09-17
-Author: Richard Clark - http://richclarkdesign.com
-Twitter: @rich_clark
-*/
 
 html, body, div, span, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -110,12 +103,10 @@ input, select {
 {
 	height: 660px;
 
-	/*background-color: red;*/
 }
 header
 {
 	height: 100px;
-
 	background-color: black;
 	padding: 10px;
 }
@@ -128,7 +119,6 @@ section
 footer
 {
 	height: 82px;
-	
 	background-color: black;
 }
 .logo
@@ -157,19 +147,19 @@ nav li
 	line-height: 80px;
 }
 
-section .sec_img
+.sec_img
 {
 	height: 550px;
 	margin-top: 0px;
-	background-image: url("images/1.jpg");
+	background-image: url("../images/1.jpg");
 }
 .box
 {
 	height: 300px;
 	width: 450px;
-	background-color: #030002;
+	background-color: #03000292;
 	margin: 70px auto;
-	opacity: .6;
+	opacity: 10;
 	color: white;
 }
 
@@ -179,7 +169,7 @@ section .sec_img
 {
 	height: 650px;
 	margin-top: 0px;
-	background-image: url("images/3.jpg");
+	background-image: url("../images/3.jpg");
 }
 .box1
 {
@@ -206,7 +196,8 @@ input
 {
 	height: 630px;
 	margin-top: 0px;
-	background-image: url("images/4.png");
+	background-image: url("../images/1.jpg") 
+
 }
 .box2
 {
