@@ -177,20 +177,68 @@ nav li
 	height: 350px;
 	width: 400px;
 	background-color: black;
-	margin: 70px auto;
+	
 	opacity: .7;
 	color: white;
-	padding: 20px;
+	
 }
-form .login
-{
-	margin: auto 50px;
-}
-input
-{
-	height: 25px;
-	width: 300px;
+.container {
+  
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+margin: 0px auto 300px;
 
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    font-weight: bold;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #45a049;
+}
+
+.signup-link {
+    margin-top: 15px;
+}
+
+.signup-link a {
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
 }
 /*------------------------------registration--------------------*/
 .reg_img
