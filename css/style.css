@@ -118,8 +118,10 @@ section
 }
 footer
 {
-	
-	height: 82px;
+
+	position: relative;
+    bottom: 0;
+	height: 100px;
 	background-color: black;
 }
 .logo
@@ -172,24 +174,21 @@ nav li
 	margin-top: 0px;
 	background-image: url("../images/3.jpg");
 }
-.box1
-{
-	height: 350px;
-	width: 400px;
-	background-color: black;
-	
-	opacity: .7;
-	color: white;
-	
-}
+
 .container {
   
     padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
-margin: 0px auto 300px;
-
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    margin: 20px auto 300px;
     text-align: center;
+    background-color: rgba(0, 0, 0, 0.627);
+    color: white;
+
+    padding: 30px;
+    border-radius: 10px;
+
+ 
 }
 
 h2 {
@@ -245,16 +244,6 @@ h2 {
 {
 	height: 630px;
 	margin-top: 0px;
-	background-image: url("../images/1.jpg") 
+	background-image: url("../images/4.png") 
 
-}
-.box2
-{
-	height: 589px;
-	width: 400px;
-	background-color: black;
-	margin: 0px auto;
-	opacity: .7;
-	color: white;
-	padding: 20px;
 }

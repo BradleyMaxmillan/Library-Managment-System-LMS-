@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="shortcut icon" href="./images/9.png" type="image/x-icon" />
-    <title>Online Library Managment System</title>
+    <title>Student Registration</title>
 
     <style type="text/css">
       nav {
@@ -38,11 +38,11 @@
         </nav>
       </header>
       <section>
-        <div class="log_img">
+        <div class="reg_img">
           <br /><br /><br />
           
           
-          <div class="box">
+          <div >
             <div class="container">
               <h1 style="text-align: center; font-size: 35px; color: antiquewhite">
                 Library Managment System
@@ -50,6 +50,24 @@
               <br />
               <h2>Login</h2>
               <form action="#">
+                <div class="input-group">
+                  <label for="email">First Name:</label>
+                  <input
+                    type="email"
+                    id="email"
+                    placeholder="First Name"
+                    required
+                  />
+                </div>
+                <div class="input-group">
+                  <label for="email">Last Name:</label>
+                  <input
+                    type="email"
+                    id="email"
+                    placeholder="Last Name"
+                    required
+                  />
+                </div>
                 <div class="input-group">
                   <label for="email">Email:</label>
                   <input
@@ -69,12 +87,7 @@
                   />
                 </div>
                 <button type="submit" class="btn">Login</button>
-                <p class="signup-link">
-                <a href="signup.html">Forgot Password?</a>
-                </p>
-                <p class="signup-link">
-                  Don't have an account? <a href="signup.html">Sign up</a>
-                </p>
+              
               </form>
             </div>
           </div>
