@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,9 +13,11 @@
       font-family: Arial, sans-serif;
       padding-top: 70px;
     }
+
     .book-section {
       margin: 20px;
     }
+
     .book-list {
       display: flex;
       overflow-x: auto;
@@ -22,16 +25,19 @@
       padding-bottom: 10px;
       scrollbar-width: thin;
     }
+
     .book-item {
       flex: 0 0 auto;
       width: 150px;
       text-align: center;
       position: relative;
     }
+
     .book-item img {
       width: 100%;
       border-radius: 8px;
     }
+
     .rating {
       position: absolute;
       top: 5px;
@@ -42,21 +48,25 @@
       border-radius: 5px;
       font-size: 12px;
     }
+
     .section-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
+
     .more-link {
       color: #ff9800;
       text-decoration: none;
       font-size: 14px;
     }
+
     .search-bar {
       width: 300px;
     }
   </style>
 </head>
+
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container-fluid">
@@ -66,18 +76,18 @@
       </button>
       <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
         <input type="text" id="searchInput" class="form-control search-bar" placeholder="Search books...">
-      
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="index.html">HOME</a></li>
-        <li class="nav-item"><a class="nav-link" href="books.html">BOOKS</a></li>
-        <li class="nav-item"><a class="nav-link" href="student_login.html">STUDENT-LOGIN</a></li>
-        <li class="nav-item"><a class="nav-link" href="signup.html">REGISTRATION</a></li>
-        <li class="nav-item"><a class="nav-link" href="feedback.php">FEEDBACK</a></li>
-      </ul>
-	</div>
+
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.php">HOME</a></li>
+          <li class="nav-item"><a class="nav-link" href="books.php">BOOKS</a></li>
+          <li class="nav-item"><a class="nav-link" href="login.php">STUDENT-LOGIN</a></li>
+          <li class="nav-item"><a class="nav-link" href="signup.php">REGISTRATION</a></li>
+
+        </ul>
+      </div>
     </div>
   </nav>
-  
+
   <div class="container">
     <div class="book-section">
       <div class="section-header">
@@ -132,6 +142,7 @@
         document.getElementById(elementId).innerHTML = "<p style='color:red;'>Failed to load books.</p>";
       }
     }
+
     function displayBooks(books, elementId) {
       const bookList = document.getElementById(elementId);
       bookList.innerHTML = '';
@@ -158,4 +169,5 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

@@ -5,72 +5,70 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Online Library Management System</title>
+  <link rel="stylesheet" href="./css/style.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body {
-      background: url("../images/1.jpg") center center/cover;
-      height: 120vh;
-      display: flex;
-      flex-direction: column;
-      padding-top: 70px;
-    }
-    .form-container {
-      max-width: 600px;
-      margin:30px auto;
-      background: rgba(0, 0, 0, 0.8);
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-      color: antiquewhite;
-    }
-    .form-container h2 {
-      text-align: center;
-    }
-    .form-control {
-  font-size: 18px;  
-  padding: 12px;    
-  height: 40px;     
-  width: 300px;
-}
-.form-control::placeholder {
-  color: rgba(0, 0, 0, 0.3); 
-}
-    footer {
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #212529; /* Matches navbar */
-  color: white;
-}
+
   </style>
 </head>
 
 <body>
   <!-- Responsive Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark w-100 fixed-top">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">ONLINE LIBRARY MANAGEMENT SYSTEM</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="index.html">HOME</a></li>
-          <li class="nav-item"><a class="nav-link" href="books.html">BOOKS</a></li>
-          <li class="nav-item"><a class="nav-link" href="student_login.html">STUDENT-LOGIN</a></li>
-          <li class="nav-item"><a class="nav-link" href="signup.html">REGISTRATION</a></li>
-          <li class="nav-item"><a class="nav-link" href="feedback.php">FEEDBACK</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+  <?php
 
+  include "navbar.php"
+
+  ?>
   <!-- Registration Form -->
   <div class="form-container">
     <h2>User Registration</h2>
-    
-    <form>
+
+    <?php
+
+    if (isset($_POST["submit"])) {
+
+      $firstName = $_POST["firstName"];
+      $lastName = $_POST["lastName"];
+      $Username = $_POST["Username"];
+      $password = $_POST["password"];
+      $repeatPassword = $_POST["repeatPassword"];
+      $rollNo = $_POST["rollNo"];
+      $email = $_POST["email"];
+
+      $errors = array();
+
+      // Validate email
+      if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        array_push($errors, "Email is not valid.");
+      }
+
+      // Check password length
+      if (strlen($password) < 8) {
+        array_push($errors, "Password must be at least 8 characters long.");
+      }
+
+      // Check if passwords match
+      if ($password !== $repeatPassword) {
+        array_push($errors, "Passwords do not match.");
+      }
+
+      // Display errors
+      if (count($errors) > 0) {
+        foreach ($errors as $error) {
+          echo '<div class="alert alert-danger">' . $error . '</div>';
+        }
+      } else {
+
+        
+      }
+    }
+
+
+    ?>
+
+
+
+    <form method="POST" action="">
       <div class="mb-3">
         <label class="form-label">First Name</label>
         <input type="text" class="form-control" placeholder="Enter your first name" name="firstName" required>
@@ -99,7 +97,7 @@
         <label class="form-label">Email</label>
         <input type="email" class="form-control" placeholder="Enter your email" name="email" required>
       </div>
-      <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+      <input type="submit" class="btn btn-primary w-100" value="Sign Up" name="submit">
     </form>
   </div>
 
