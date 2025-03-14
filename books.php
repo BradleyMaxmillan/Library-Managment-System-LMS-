@@ -131,42 +131,31 @@
   </footer>
 
   <script>
-    async function fetchBooks(query, elementId) {
-      try {
-        const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${query}`);
-        if (!response.ok) throw new Error('Failed to fetch books');
-        const data = await response.json();
-        displayBooks(data.items || [], elementId);
-      } catch (error) {
-        console.error("Error fetching books:", error);
-        document.getElementById(elementId).innerHTML = "<p style='color:red;'>Failed to load books.</p>";
-      }
+  async function fetchBooks(query, elementId) {
+    try {
+      const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${query}`);
+      const data = await res.json();
+      document.getElementById(elementId).innerHTML = (data.items || []).map(book => {
+        let info = book.volumeInfo;
+        return `
+          <div class="book-item">
+            <img src="${info.imageLinks?.thumbnail || 'https://via.placeholder.com/150'}" alt="Book">
+            <div class="rating">${info.averageRating ? `⭐ ${info.averageRating}` : 'No Rating'}</div>
+            <p>${info.title}</p>
+          </div>`;
+      }).join('');
+    } catch {
+      document.getElementById(elementId).innerHTML = "<p style='color:red;'>Failed to load books.</p>";
     }
+  }
 
-    function displayBooks(books, elementId) {
-      const bookList = document.getElementById(elementId);
-      bookList.innerHTML = '';
-      books.forEach(book => {
-        const bookInfo = book.volumeInfo;
-        const bookItem = document.createElement('div');
-        bookItem.classList.add('book-item');
-        bookItem.innerHTML = `
-          <img src="${bookInfo.imageLinks?.thumbnail || 'https://via.placeholder.com/150'}" alt="Book Image">
-          <div class="rating">${bookInfo.averageRating ? `⭐ ${bookInfo.averageRating}` : 'No Rating'}</div>
-          <p>${bookInfo.title}</p>
-        `;
-        bookList.appendChild(bookItem);
-      });
-    }
-    document.getElementById('searchInput').addEventListener('input', (event) => {
-      fetchBooks(event.target.value, 'popularBooks');
-    });
-    fetchBooks('popular', 'popularBooks');
-    fetchBooks('suggestions', 'suggestedBooks');
-    fetchBooks('trending', 'trendingBooks');
-    fetchBooks('oscar winning', 'oscarBooks');
-    fetchBooks('science fiction', 'scifiBooks');
-  </script>
+  ['popular', 'suggestions', 'trending', 'oscar winning', 'science fiction'].forEach(query => 
+    fetchBooks(query, query.replace(/\s+/g, '') + 'Books')
+  );
+
+  document.getElementById('searchInput').addEventListener('input', e => fetchBooks(e.target.value, 'popularBooks'));
+</script>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
