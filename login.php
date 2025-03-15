@@ -1,3 +1,8 @@
+<?php
+
+include "connection.php";
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -23,6 +28,32 @@
 
   <div class="form-container">
     <h2>User Login</h2>
+
+    <?php
+
+if (isset($_POST["submit"])) {
+
+  $Username = $_POST["Username"];
+  $password = $_POST["password"];
+
+  $errors = array();
+
+  // Check if passwords match
+  if ($password !== $repeatPassword) {
+    array_push($errors, "Passwords do not match.");
+  }
+
+    // Check for duplicate Username
+
+  $res=mysqli_query($db,"SELECT username from Student");
+  while($row=mysqli_fetch_assoc($res)){
+    if($row['username'] == $Username);
+    {
+      array_push($errors, "Username already Exists");
+      break;
+    }
+
+   ?>
     <form>
       <div class="mb-3">
         <label class="form-label">Username</label>
