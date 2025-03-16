@@ -27,47 +27,52 @@ include "connection.php";
   ?>
 
   <div class="form-container">
+
     <h2>User Login</h2>
-
-    <?php
-
-if (isset($_POST["submit"])) {
-
-  $Username = $_POST["Username"];
-  $password = $_POST["password"];
-
-  $errors = array();
-
-  // Check if passwords match
-  if ($password !== $repeatPassword) {
-    array_push($errors, "Passwords do not match.");
-  }
-
-    // Check for duplicate Username
-
-  $res=mysqli_query($db,"SELECT username from Student");
-  while($row=mysqli_fetch_assoc($res)){
-    if($row['username'] == $Username);
-    {
-      array_push($errors, "Username already Exists");
-      break;
-    }
-
-   ?>
-    <form>
+    <form name="login" action="" method="post">
       <div class="mb-3">
         <label class="form-label">Username</label>
-        <input type="text" class="form-control" placeholder="Enter your username" required>
+        <input type="text" class="form-control" placeholder="Enter your username" name="Username" required>
       </div>
       <div class="mb-3">
         <label class="form-label">Password</label>
-        <input type="password" class="form-control" placeholder="Enter your password" required>
+        <input type="password" name="password" class="form-control" placeholder="Enter your password" required>
       </div>
-      <button type="submit" class="btn btn-primary w-100">Login</button>
+      <input type="submit" class="btn btn-primary w-100" value="Log in" name="submit">
       <div class="form-links">
         <a href="forgot_password.html">Forgot Password?</a> | <a href="signup.html">Sign Up</a>
       </div>
     </form>
+
+    <?php
+
+if(isset($_POST['submit'])){
+
+  $password =$_POST['password'];
+  $username =$_POST['Username'];
+
+  $res = mysqli_query($db,"SELECT * FROM `student` WHERE  username ='$username' &&  password ='$password'; ");
+
+  $count = mysqli_num_rows($res);
+
+  if($count==0){
+
+    echo '<div class="alert alert-danger">' . "The username and password doesn't match" . '</div>';
+  }else{
+
+    ?>
+    <script type="text/javascript">
+
+      window.location="index.php"
+
+      </script>
+
+
+    <?php
+  }
+}
+?>
+
   </div>
 
   <footer class="text-center py-3 bg-dark text-white mt-auto">

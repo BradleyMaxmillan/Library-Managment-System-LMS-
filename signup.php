@@ -40,7 +40,7 @@ include "connection.php";
 
       $errors = array();
 
-      // Validate email
+        // Validate email
       if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         array_push($errors, "Email is not valid.");
       }
@@ -53,11 +53,12 @@ include "connection.php";
       if ($password !== $repeatPassword) {
         array_push($errors, "Passwords do not match.");
       }
-      // Check for duplicate Username
+        // Check for duplicate Username
 
-      $res = mysqli_query($db, "SELECT username from Student");
-      while ($row = mysqli_fetch_assoc($res)) {
-        if ($row['username'] == $Username); {
+      $res=mysqli_query($db,"SELECT username from Student");
+      while($row=mysqli_fetch_assoc($res)){
+        if($row['username'] == $Username);
+        {
           array_push($errors, "Username already Exists");
           break;
         }
@@ -66,15 +67,15 @@ include "connection.php";
       if (count($errors) > 0) {
         foreach ($errors as $error) {
           echo '<div class="alert alert-danger">' . $error . '</div>';
-        }
-      } else {
+        }}
+     else { 
         $sql = "INSERT INTO `student`  VALUES (' $firstName','$lastName','$Username','$password','$rollNo','$email";
 
-        mysqli_query($db, $sql);
+        mysqli_query($db,$sql);
 
         echo '<div class="alert alert-successful">' . "Registration was Succesful" . '</div>';
       }
-    }
+      }
     ?>
 
     <form method="POST" action="">
