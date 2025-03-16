@@ -26,7 +26,7 @@ include "connection.php";
 
   ?>
 
-  <div class="form-container">
+  <div class="form-container" style="min-width: 400px">
 
     <h2>User Login</h2>
     <form name="login" action="" method="post">
@@ -40,7 +40,7 @@ include "connection.php";
       </div>
       <input type="submit" class="btn btn-primary w-100" value="Log in" name="submit">
       <div class="form-links">
-        <a href="forgot_password.html">Forgot Password?</a> | <a href="signup.html">Sign Up</a>
+        <a href="forgot_password.html">Forgot Password?</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="signup.php">Sign Up</a>
       </div>
     </form>
 
