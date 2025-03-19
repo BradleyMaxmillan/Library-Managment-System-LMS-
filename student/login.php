@@ -1,6 +1,12 @@
+
 <?php
 
-include "connection.php";
+ session_start();
+
+if(isset($_SESSION["user"])){
+
+	header ("Location: index.php");
+}
 
 ?>
 <!DOCTYPE html>
@@ -49,26 +55,29 @@ include "connection.php";
 if(isset($_POST['submit'])){
 
   $password =$_POST['password'];
-  $username =$_POST['Username'];
+  $Username =$_POST['Username'];
 
-  $res = mysqli_query($db,"SELECT * FROM `student` WHERE  username ='$username' &&  password ='$password'; ");
+  require_once "connection.php";
 
-  $count = mysqli_num_rows($res);
-
-  if($count==0){
-
-    echo '<div class="alert alert-danger">' . "The username and password doesn't match" . '</div>';
-  }else{
-
-    ?>
-    <script type="text/javascript">
-
-      window.location="index.php"
-
-      </script>
-
-
-    <?php
+  // Prepare a secure SQL statement
+  $stmt = mysqli_prepare($conn, "SELECT * FROM `student` WHERE `Username` = ?");
+  mysqli_stmt_bind_param($stmt, "s", $Username);
+  mysqli_stmt_execute($stmt);
+  
+  $result = mysqli_stmt_get_result($stmt);
+  $user = mysqli_fetch_assoc($result);
+  
+  if ($user) {
+      // Verify the password with password_verify()
+      if (password_verify($password, $user['Password'])) {
+          echo "<div class='alert alert-success'>Login successful!</div>";
+          header("Location: index.php");
+          $_SESSION['user'] = "yes";
+      } else {
+          echo "<div class='alert alert-danger'>Incorrect password.</div>";
+      }
+  } else {
+      echo "<div class='alert alert-danger'>Username does not Exist.</div>";
   }
 }
 ?>

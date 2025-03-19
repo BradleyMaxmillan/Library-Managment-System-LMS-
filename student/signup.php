@@ -1,6 +1,11 @@
 <?php
 
-include "connection.php";
+ session_start();
+
+if(isset($_SESSION["user"])){
+
+	header ("Location: index.php");
+}
 
 ?>
 <!DOCTYPE html>
@@ -37,6 +42,8 @@ include "connection.php";
       $rollNo = $_POST["rollNo"];
       $email = $_POST["email"];
 
+      $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+
       $errors = array();
 
       // Validate email
@@ -52,6 +59,27 @@ include "connection.php";
       if ($password !== $repeatPassword) {
         array_push($errors, "Passwords do not match.");
       }
+      
+      require_once "connection.php"; 
+
+      $stmt = mysqli_prepare($conn, "SELECT * FROM `student` WHERE email = ? or Username = ?");
+      mysqli_stmt_bind_param($stmt, "ss", $email,$Username);
+      mysqli_stmt_execute($stmt);
+      
+      
+      $result = mysqli_stmt_get_result($stmt);
+      $user = mysqli_fetch_assoc($result);
+      
+      
+      if ($user) {
+        if ($user['Email'] === $email) {
+            array_push($errors, "Email is already registered.");
+        }
+        if ($user['Username'] === $Username) {
+            array_push($errors, "Username is already taken.");
+        }
+    }
+    
 
       // Display errors
       if (count($errors) > 0) {
@@ -59,7 +87,27 @@ include "connection.php";
           echo '<div class="alert alert-danger">' . $error . '</div>';
         }
       } else {
-        // enter sql
+        require_once "connection.php";
+        $sql ="INSERT INTO `student` (`Full Name`, `Username`, `Password`, `Roll No`, `Email`) VALUES (?,?,?,?,?)";
+
+
+
+        $stmt = mysqli_stmt_init($conn);
+
+        $prepareStmt = mysqli_stmt_prepare($stmt, $sql);
+
+        if ($prepareStmt) {
+          mysqli_stmt_bind_param($stmt, "sssis", $fullName, $Username, $passwordHash, $rollNo, $email);
+
+          mysqli_stmt_execute($stmt);
+          echo "<div class='alert alert-success'>Your registered successfully</div>";
+        }
+        else{
+
+          die( "Something went wrong");
+
+        }
+      
       }
     }
 

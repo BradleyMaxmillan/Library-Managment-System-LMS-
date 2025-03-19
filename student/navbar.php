@@ -21,6 +21,7 @@
 					<li class="nav-item"><a class="nav-link" href="login.php">STUDENT-LOGIN</a></li>
 					<li class="nav-item"><a class="nav-link" href="signup.php">REGISTRATION</a></li>
 					<li class="nav-item"><a class="nav-link" href="feedback.php">FEEDBACK</a></li>
+					<li class="nav-item"><a class="nav-link" href="logOut.php">LogOut</a></li>
 
 				</ul>
 			</div>
