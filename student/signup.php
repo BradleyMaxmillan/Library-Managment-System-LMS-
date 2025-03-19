@@ -30,8 +30,7 @@ include "connection.php";
 
     if (isset($_POST["submit"])) {
 
-      $firstName = $_POST["firstName"];
-      $lastName = $_POST["lastName"];
+      $fullName = $_POST["fullName"];
       $Username = $_POST["Username"];
       $password = $_POST["password"];
       $repeatPassword = $_POST["repeatPassword"];
@@ -40,7 +39,7 @@ include "connection.php";
 
       $errors = array();
 
-        // Validate email
+      // Validate email
       if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         array_push($errors, "Email is not valid.");
       }
@@ -53,47 +52,32 @@ include "connection.php";
       if ($password !== $repeatPassword) {
         array_push($errors, "Passwords do not match.");
       }
-        // Check for duplicate Username
 
-      $res=mysqli_query($db,"SELECT username from Student");
-      while($row=mysqli_fetch_assoc($res)){
-        if($row['username'] == $Username);
-        {
-          array_push($errors, "Username already Exists");
-          break;
-        }
-      }
       // Display errors
       if (count($errors) > 0) {
         foreach ($errors as $error) {
           echo '<div class="alert alert-danger">' . $error . '</div>';
-        }}
-     else { 
-        $sql = "INSERT INTO `student`  VALUES (' $firstName','$lastName','$Username','$password','$rollNo','$email";
-
-        mysqli_query($db,$sql);
-
-        echo '<div class="alert alert-successful">' . "Registration was Succesful" . '</div>';
+        }
+      } else {
+        // enter sql
       }
-      }
+    }
+
     ?>
 
     <form method="POST" action="">
       <div class="mb-3">
-        <label class="form-label">First Name</label>
-        <input type="text" class="form-control" placeholder="Enter your first name" name="firstName" required>
+        <label class="form-label">Full Name</label>
+        <input type="text" class="form-control" placeholder="Full Name" name="fullName" required>
       </div>
-      <div class="mb-3">
-        <label class="form-label">Last Name</label>
-        <input type="text" class="form-control" placeholder="Enter your last name" name="lastName" required>
-      </div>
+
       <div class="mb-3">
         <label class="form-label">Username</label>
-        <input type="text" class="form-control" placeholder="Enter your username" name="Username" required>
+        <input type="text" class="form-control" placeholder="Username" name="Username" required>
       </div>
       <div class="mb-3">
         <label class="form-label">Password</label>
-        <input type="password" class="form-control" placeholder="Enter your password" name="password" required>
+        <input type="password" class="form-control" placeholder="Password" name="password" required>
       </div>
       <div class="mb-3">
         <label class="form-label">Repeat Password</label>
@@ -101,11 +85,11 @@ include "connection.php";
       </div>
       <div class="mb-3">
         <label class="form-label">Roll No</label>
-        <input type="text" class="form-control" placeholder="Enter your roll number" name="rollNo" required>
+        <input type="text" class="form-control" placeholder="Roll Number" name="rollNo" required>
       </div>
       <div class="mb-3">
         <label class="form-label">Email</label>
-        <input type="email" class="form-control" placeholder="Enter your email" name="email" required>
+        <input type="email" class="form-control" placeholder="Email" name="email" required>
       </div>
       <input type="submit" class="btn btn-primary w-100" value="Sign Up" name="submit">
     </form>
