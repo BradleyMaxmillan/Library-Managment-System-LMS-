@@ -17,15 +17,6 @@ body {
     color: antiquewhite;
 }
 
-footer {
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #212529;
-    /* Matches navbar */
-    color: white;
-}
 
 /* forms */
 
