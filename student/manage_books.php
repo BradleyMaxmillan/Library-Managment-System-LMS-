@@ -5,16 +5,39 @@ if (!isset($_SESSION["user"]) || $_SESSION["user_type"] != "admin") {
     header("Location: login.php");
     exit();
 }
+
+include "connection.php";
+
+// Handle deletion if 'delete' parameter is set
+if (isset($_GET['delete'])) {
+    $bookId = intval($_GET['delete']);
+    $sqlDelete = "DELETE FROM books WHERE id = ?";
+    $stmtDel = $conn->prepare($sqlDelete);
+    $stmtDel->bind_param("i", $bookId);
+    if ($stmtDel->execute()) {
+        $stmtDel->close();
+        // Redirect back with a success message (optional)
+        header("Location: manage_books.php?msg=deleted");
+        exit();
+    } else {
+        echo "Error deleting record: " . $stmtDel->error;
+        exit();
+    }
+}
+
+// Fetch all books from the database
+$sql = "SELECT id, Title, Author, type, published_date FROM books ORDER BY Title ASC";
+$result = mysqli_query($conn, $sql);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Dashboard - Library Management</title>
+  <title>Manage Books - Library Admin</title>
   <link rel="stylesheet" href="./css/style.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Professional icons with FontAwesome -->
+  <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     /* Background & overlay */
@@ -43,7 +66,7 @@ if (!isset($_SESSION["user"]) || $_SESSION["user_type"] != "admin") {
       left: 0;
       bottom: 0;
       width: 250px;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgb(0, 0, 0);
       padding: 20px;
       display: flex;
       flex-direction: column;
@@ -111,42 +134,6 @@ if (!isset($_SESSION["user"]) || $_SESSION["user_type"] != "admin") {
     .dashboard-body {
       margin-top: 100px;
     }
-    /* Dashboard Cards */
-    .cards {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      margin-bottom: 40px;
-    }
-    .card {
-      background: rgba(0, 0, 0, 0.6);
-      border: none;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      flex: 1;
-      min-width: 250px;
-      padding: 20px;
-      color: #e0e0e0;
-      transition: transform 0.3s ease-in-out;
-    }
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
-    }
-    .card h3 {
-      font-size: 24px;
-      margin-bottom: 15px;
-      color: #d4af37;
-    }
-    /* Section Titles */
-    .section-title {
-      font-size: 28px;
-      color: #d4af37;
-      margin: 30px 0 20px;
-      border-bottom: 2px solid rgba(212, 175, 55, 0.5);
-      padding-bottom: 10px;
-    }
     /* Table Styles */
     .table-responsive {
       background: rgba(0, 0, 0, 0.6);
@@ -162,19 +149,21 @@ if (!isset($_SESSION["user"]) || $_SESSION["user_type"] != "admin") {
     .table tbody td {
       color: #e0e0e0;
     }
-    /* List Group for Notifications & Messages */
-    .list-group-item {
-      background: rgba(0, 0, 0, 0.6);
-      border: none;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      color: #e0e0e0;
-    }
-    .list-group-item i {
+    .action-links a {
       margin-right: 10px;
       color: #d4af37;
+      text-decoration: none;
+    }
+    .action-links a:hover {
+      text-decoration: underline;
+    }
+    /* Section Titles */
+    .section-title {
+      font-size: 28px;
+      color: #d4af37;
+      margin: 30px 0 20px;
+      border-bottom: 2px solid rgba(212, 175, 55, 0.5);
+      padding-bottom: 10px;
     }
     /* Responsive Adjustments */
     @media (max-width: 992px) {
@@ -203,9 +192,6 @@ if (!isset($_SESSION["user"]) || $_SESSION["user_type"] != "admin") {
       .content header {
         left: 180px;
         padding: 10px 20px;
-      }
-      .cards {
-        flex-direction: column;
       }
     }
     @media (max-width: 576px) {
@@ -239,9 +225,8 @@ if (!isset($_SESSION["user"]) || $_SESSION["user_type"] != "admin") {
 </head>
 <body>
   <div class="overlay"></div>
-  <!-- Optional: include your navbar if needed -->
- 
-
+  
+  <!-- Sidebar -->
   <div class="sidebar">
     <div class="logo">Library Admin</div>
     <ul>
@@ -255,117 +240,58 @@ if (!isset($_SESSION["user"]) || $_SESSION["user_type"] != "admin") {
       <a href="logout.php" class="btn btn-primary w-100"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
   </div>
-
+  
+  <!-- Content Area -->
   <div class="content">
     <header>
-      <h1>Dashboard</h1>
+      <h1>Manage Books</h1>
       <div>
-        <span>Welcome, Admin!</span>
+        <a href="./books/insert_books.php" class="btn btn-primary"><i class="fas fa-plus"></i> Add New Book</a>
       </div>
     </header>
     <div class="dashboard-body">
-      <!-- Dashboard Cards -->
-      <section class="cards">
-        <div class="card">
-          <h3>Total Books</h3>
-          <p>1500</p>
-        </div>
-        <div class="card">
-          <h3>Registered Users</h3>
-          <p>350</p>
-        </div>
-        <div class="card">
-          <h3>Active Loans</h3>
-          <p>45</p>
-        </div>
-        <div class="card">
-          <h3>Overdue Returns</h3>
-          <p>10</p>
-        </div>
-      </section>
-
-      <!-- System Statistics Section -->
-      <section>
-        <h2 class="section-title">System Statistics</h2>
-        <div class="cards">
-          <div class="card">
-            <h3>Books Issued Today</h3>
-            <p>25</p>
-          </div>
-          <div class="card">
-            <h3>Books Returned Today</h3>
-            <p>18</p>
-          </div>
-          <div class="card">
-            <h3>New Registrations</h3>
-            <p>7</p>
-          </div>
-          <div class="card">
-            <h3>Pending Reservations</h3>
-            <p>4</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Recent Book Issues Table -->
-      <section>
-        <h2 class="section-title">Recent Book Issues</h2>
-        <div class="table-responsive">
-          <table class="table">
-            <thead>
+      <?php if(isset($_GET['msg']) && $_GET['msg'] == 'deleted'): ?>
+        <div class="alert alert-success">Book deleted successfully.</div>
+      <?php endif; ?>
+      <h2 class="section-title">Book List</h2>
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Author</th>
+              <th>Type</th>
+              <th>Published</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php if($result && mysqli_num_rows($result) > 0): ?>
+              <?php while($row = mysqli_fetch_assoc($result)): ?>
+                <tr>
+                  <td><?php echo htmlspecialchars($row['id']); ?></td>
+                  <td><?php echo htmlspecialchars($row['Title']); ?></td>
+                  <td><?php echo htmlspecialchars($row['Author']); ?></td>
+                  <td><?php echo htmlspecialchars($row['type']); ?></td>
+                  <td><?php echo htmlspecialchars($row['published_date']); ?></td>
+                  <td class="action-links">
+                    <a href="edit_book.php?id=<?php echo $row['id']; ?>"><i class="fas fa-edit"></i> Edit</a>
+                    <a href="manage_books.php?delete=<?php echo $row['id']; ?>" onclick="return confirm('Are you sure you want to delete this book?');"><i class="fas fa-trash-alt"></i> Delete</a>
+                  </td>
+                </tr>
+              <?php endwhile; ?>
+            <?php else: ?>
               <tr>
-                <th>Date</th>
-                <th>Book Title</th>
-                <th>User</th>
-                <th>Status</th>
+                <td colspan="6" class="text-center">No books found.</td>
               </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>2025-03-20</td>
-                <td>Design Patterns</td>
-                <td>john_doe</td>
-                <td>Issued</td>
-              </tr>
-              <tr>
-                <td>2025-03-19</td>
-                <td>Clean Code</td>
-                <td>jane_smith</td>
-                <td>Returned</td>
-              </tr>
-              <tr>
-                <td>2025-03-18</td>
-                <td>Refactoring</td>
-                <td>alice_lee</td>
-                <td>Issued</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- Top Borrowed Books -->
-      <section>
-        <h2 class="section-title">Top Borrowed Books</h2>
-        <ul class="list-group mb-4">
-          <li class="list-group-item"><i class="fas fa-book"></i> The Pragmatic Programmer - 120 borrows</li>
-          <li class="list-group-item"><i class="fas fa-book"></i> Code Complete - 95 borrows</li>
-          <li class="list-group-item"><i class="fas fa-book"></i> Refactoring - 80 borrows</li>
-        </ul>
-      </section>
-
-      <!-- Latest Messages -->
-      <section>
-        <h2 class="section-title">Latest Messages</h2>
-        <ul class="list-group">
-          <li class="list-group-item"><i class="fas fa-envelope"></i> Message from user <strong>mike89</strong>: "Need assistance with my account."</li>
-          <li class="list-group-item"><i class="fas fa-envelope"></i> Message from user <strong>emma_w</strong>: "Request for new books."</li>
-          <li class="list-group-item"><i class="fas fa-envelope"></i> Message from user <strong>sam_t</strong>: "Feedback on the new system update."</li>
-        </ul>
-      </section>
+            <?php endif; ?>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
-
+  
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

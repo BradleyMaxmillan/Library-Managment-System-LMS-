@@ -31,17 +31,21 @@ if (!$res || mysqli_num_rows($res) == 0) {
 // Get the book data
 $book = mysqli_fetch_assoc($res);
 
+// --- Convert the BLOB to a Base64 data URI ---
+$coverImage = "https://via.placeholder.com/300x400?text=No+Cover";
+if (!empty($book['cover'])) {
+    $imgInfo = getimagesizefromstring($book['cover']);
+    $mime    = $imgInfo ? $imgInfo["mime"] : "image/jpeg";
+    $coverImage = 'data:' . $mime . ';base64,' . base64_encode($book['cover']);
+}
+
 // Optional fields with placeholders if not available
-$coverImage     = isset($book['cover_image']) ? $book['cover_image'] : "https://via.placeholder.com/300x400?text=No+Cover";
-$rating         = isset($book['rating'])      ? $book['rating']      : "N/A"; 
-$published_date = isset($book['published_date']) ? $book['published_date'] : "Unknown";
-
-// Dynamic meta values (ensure these columns exist in your table)
-$type   = isset($book['type'])   ? $book['type']   : "General";
-$genre  = isset($book['genre'])  ? $book['genre']  : "N/A";
-$status = isset($book['status']) ? $book['status'] : "Unknown";
+$rating         = $book['rating']         ?? "N/A";
+$published_date = $book['published_date'] ?? "Unknown";
+$type           = $book['type']           ?? "General";
+$genre          = $book['genre']          ?? "N/A";
+$status         = $book['status']         ?? "Unknown";
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -67,7 +71,6 @@ $status = isset($book['status']) ? $book['status'] : "Unknown";
       top: 0; left: 0; right: 0; bottom: 0;
       z-index: -1;
     }
-    /* Hero section styling */
     .hero {
       display: flex;
       flex-wrap: wrap;
@@ -118,7 +121,6 @@ $status = isset($book['status']) ? $book['status'] : "Unknown";
       background-color: #b89b2e;
       color: #fff;
     }
-    /* Meta badges styling */
     .meta-badges {
       margin-bottom: 1rem;
     }
@@ -162,11 +164,11 @@ $status = isset($book['status']) ? $book['status'] : "Unknown";
       </div>
 
       <!-- Description -->
-      <p class="hero-description">
+      <p class="hero-description" style="color: whitesmoke;">
         <?php echo $book['Description']; ?>
       </p>
 
-      <!-- Action Buttons -->
+      <!-- Action Buttons (customize as needed) -->
       <button class="btn btn-custom me-2">Add to List</button>
       <button class="btn btn-outline-light">Share</button>
     </div>

@@ -52,7 +52,7 @@
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark  fixed-top" style=" background: rgba(18, 18, 18, 0.92); ">
-    <div class="container-fluid">
+    <div class="container-fluid ">
       <a class="navbar-brand" href="#">
         <i class="fa-solid fa-book me-2"></i>Online Library
       </a>
@@ -67,17 +67,17 @@
       <div class="collapse navbar-collapse d-none d-lg-block">
         <ul class="navbar-nav ms-auto align-items-center">
           <li class="nav-item">
-            <a class="nav-link" href="index.php">
+            <a class="nav-link" href="../index.php">
               <i class="fa-solid fa-house me-1"></i> Home
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="./books/books.php">
+            <a class="nav-link" href="books.php">
               <i class="fa-solid fa-book-open me-1"></i> Books
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="feedback.php">
+            <a class="nav-link" href="../feedback.php">
               <i class="fa-solid fa-comment me-1"></i> Feedback
             </a>
           </li>
@@ -89,18 +89,18 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
               <li>
-                <a class="dropdown-item" href="login.php">
+                <a class="dropdown-item" href="../login.php">
                   <i class="fa-solid fa-right-to-bracket me-1"></i> Login
                 </a>
               </li>
               <li>
-                <a class="dropdown-item" href="signup.php">
+                <a class="dropdown-item" href="../signup.php">
                   <i class="fa-solid fa-pen-to-square me-1"></i> Register
                 </a>
               </li>
               <li><hr class="dropdown-divider"></li>
               <li>
-                <a class="dropdown-item text-danger" href="logOut.php">
+                <a class="dropdown-item text-danger" href="../logOut.php">
                   <i class="fa-solid fa-door-open me-1"></i> Logout
                 </a>
               </li>
@@ -119,17 +119,17 @@
         <div class="offcanvas-body">
           <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
             <li class="nav-item">
-              <a class="nav-link" href="index.php">
+              <a class="nav-link" href="../index.php">
                 <i class="fa-solid fa-house me-1"></i> Home
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./books/books.php">
+              <a class="nav-link" href="books.php">
                 <i class="fa-solid fa-book-open me-1"></i> Books
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="feedback.php">
+              <a class="nav-link" href="../feedback.php">
                 <i class="fa-solid fa-comment me-1"></i> Feedback
               </a>
             </li>
@@ -141,18 +141,18 @@
               </a>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown2">
                 <li>
-                  <a class="dropdown-item" href="login.php">
+                  <a class="dropdown-item" href="../login.php">
                     <i class="fa-solid fa-right-to-bracket me-1"></i> Login
                   </a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="signup.php">
+                  <a class="dropdown-item" href="../signup.php">
                     <i class="fa-solid fa-pen-to-square me-1"></i> Register
                   </a>
                 </li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
-                  <a class="dropdown-item text-danger" href="logOut.php">
+                  <a class="dropdown-item text-danger" href="../logOut.php">
                     <i class="fa-solid fa-door-open me-1"></i> Logout
                   </a>
                 </li>

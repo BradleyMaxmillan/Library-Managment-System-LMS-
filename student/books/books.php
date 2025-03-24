@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION["user"])) {
-    header("Location: login.php");
+    header("Location: ../login.php");
     exit();
 }
 include "connection.php";
@@ -34,11 +34,11 @@ $popularRes = mysqli_query($conn, $popularSql);
     }
     .overlay {
       background: rgba(0, 0, 0, 0.75);
-      position: fixed;  /* Fixed to cover entire screen */
+      position: fixed;
       top: 0;
       left: 0;
-      width: 100vw;  /* Full viewport width */
-      height: 100vh;  /* Full viewport height */
+      width: 100vw;
+      height: 100vh;
       z-index: -1;
     }
     .header-title {
@@ -53,14 +53,13 @@ $popularRes = mysqli_query($conn, $popularSql);
     /* Container for each book poster + the hover card */
     .card-container {
       position: relative;
-      width: 180px;    /* approximate width (adjust as needed) */
+      width: 180px;
       margin: auto;
       cursor: pointer;
     }
-    /* The book cover (poster) */
     .book-cover {
       width: 100%;
-      height: 270px;   /* adjust for the tall look */
+      height: 270px;
       object-fit: cover;
       border-radius: 6px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
@@ -70,12 +69,11 @@ $popularRes = mysqli_query($conn, $popularSql);
     .book-cover:hover {
       transform: scale(1.03);
     }
-    /* The hidden info card that appears on hover (only on large devices) */
     .info-card {
       display: none;
       position: absolute;
       top: 100px;
-      left: 100px;  /* shift to the right of the poster */
+      left: 100px;
       width: 230px; 
       background: rgba(0,0,0,0.9);
       color: #fff;
@@ -100,7 +98,6 @@ $popularRes = mysqli_query($conn, $popularSql);
         display: block;
       }
     }
-    /* Info card text styling */
     .info-card h5 {
       margin-bottom: 0.3rem;
       color: #ffd700;
@@ -110,7 +107,6 @@ $popularRes = mysqli_query($conn, $popularSql);
       line-height: 1.4;
       margin-bottom: 0.5rem;
     }
-    /* Button styling */
     .btn-custom {
       background-color: #d4af37;
       color: #000;
@@ -124,7 +120,6 @@ $popularRes = mysqli_query($conn, $popularSql);
       background-color: #b89b2e;
       color: #fff;
     }
-    /* Sidebar styling */
     .sidebar {
       background: rgba(0, 0, 0, 0.8);
       padding: 1rem;
@@ -170,21 +165,28 @@ $popularRes = mysqli_query($conn, $popularSql);
           $res = mysqli_query($conn, $sql);
 
           while ($row = mysqli_fetch_assoc($res)) {
-            // Fallback cover image if you don't have one
-            $cover = "https://via.placeholder.com/300x450?text=No+Cover";
+            // If there's cover data, convert to a data URI
+            if (!empty($row["cover"])) {
+              $imgInfo = getimagesizefromstring($row["cover"]);
+              $mime = $imgInfo ? $imgInfo["mime"] : "image/jpeg";
+              $cover = 'data:' . $mime . ';base64,' . base64_encode($row["cover"]);
+            } else {
+              // Fallback cover if no data
+              $cover = "https://via.placeholder.com/300x450?text=No+Cover";
+            }
 
             // Book metadata
-            $id       = $row["id"];
-            $title    = $row["Title"];
-            $author   = $row["Author"];
-            $type     = $row["type"] ?? "General";
-            $genre    = $row["genre"] ?? "N/A";
-            $rating   = $row["rating"] ?? "N/A";
-            $pages    = $row["pages"] ?? "???";
-            $status   = $row["status"] ?? "Unknown";
-            $pubDate  = $row["published_date"] ?? "N/A";
-            $publisher= $row["publisher"] ?? "N/A";
-            $language = $row["language"] ?? "English";
+            $id        = $row["id"];
+            $title     = $row["Title"];
+            $author    = $row["Author"];
+            $type      = $row["type"] ?? "General";
+            $genre     = $row["genre"] ?? "N/A";
+            $rating    = $row["rating"] ?? "N/A";
+            $pages     = $row["pages"] ?? "???";
+            $status    = $row["status"] ?? "Unknown";
+            $pubDate   = $row["published_date"] ?? "N/A";
+            $publisher = $row["publisher"] ?? "N/A";
+            $language  = $row["language"] ?? "English";
 
             // Short snippet of description
             $desc = substr($row["Description"], 0, 70) . "...";
@@ -198,38 +200,24 @@ $popularRes = mysqli_query($conn, $popularSql);
 
               <!-- Hover Info Card -->
               <div class="info-card">
-                <!-- Top row: rating + book-relevant badges -->
                 <div class="d-flex align-items-center mb-2">
-                  <!-- Star icon + rating -->
                   <span class="me-2" style="font-size: 1.2rem; color: #ffd700;">
                     <i class="bi bi-star-fill"></i> <?php echo $rating; ?>
                   </span>
-                  <!-- Book type badge -->
                   <span class="badge bg-secondary me-1"><?php echo $type; ?></span>
-                  <!-- Genre badge -->
                   <span class="badge bg-secondary me-1"><?php echo $genre; ?></span>
                 </div>
-
-                <!-- Title -->
                 <h5><?php echo $title; ?></h5>
-
-                <!-- Short snippet (description) -->
                 <div class="desc">
                   <?php echo $desc; ?>
                 </div>
-
-                <!-- Aired/Published date + Status row -->
                 <div class="mb-2" style="font-size: 0.9rem;">
                   <strong>Published:</strong> <?php echo $pubDate; ?><br>
                   <strong>Status:</strong> <?php echo $status; ?>
                 </div>
-
-                <!-- Genre row -->
                 <div class="mb-2" style="font-size: 0.9rem;">
                   <strong>Genres:</strong> <?php echo $genre; ?>
                 </div>
-
-                <!-- "Read Now" Button -->
                 <a href="book_details.php?id=<?php echo $id; ?>" class="btn btn-custom">Read Now</a>
               </div>
             </div>
@@ -242,7 +230,13 @@ $popularRes = mysqli_query($conn, $popularSql);
       <div class="sidebar">
         <h4>Popular Books</h4>
         <?php while($pRow = mysqli_fetch_assoc($popularRes)): 
-          $pCover = $pRow["cover"] ?? "https://via.placeholder.com/300x450?text=No+Cover";
+          if (!empty($pRow["cover"])) {
+            $pImgInfo = getimagesizefromstring($pRow["cover"]);
+            $pMime = $pImgInfo ? $pImgInfo["mime"] : "image/jpeg";
+            $pCover = 'data:' . $pMime . ';base64,' . base64_encode($pRow["cover"]);
+          } else {
+            $pCover = "https://via.placeholder.com/300x450?text=No+Cover";
+          }
         ?>
           <div class="popular-book">
             <a href="book_details.php?id=<?php echo $pRow['id']; ?>">
@@ -261,7 +255,6 @@ $popularRes = mysqli_query($conn, $popularSql);
   </div>
 </div>
 
-<!-- Bootstrap JS (Required for Offcanvas and Dropdown) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Bootstrap JS (if needed) -->
 </body>
 </html>
