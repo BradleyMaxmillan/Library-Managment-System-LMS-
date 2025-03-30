@@ -1,10 +1,57 @@
 <?php
-ob_start(); // ✅ Start output buffering
-session_start(); // ✅ Start session at the beginning
+ob_start();
+session_start();
 
+// If a user is already logged in, redirect them (adjust as needed)
 if (isset($_SESSION["user"])) {
     header("Location: index.php");
     exit();
+}
+
+include "connection.php";
+
+// Process form submission
+if (isset($_POST['submit'])) {
+    // Retrieve and trim values from POST
+    $fullName = trim($_POST['fullName']);
+    $username = trim($_POST['Username']);
+    $password = $_POST['password'];
+    $repeatPassword = $_POST['repeatPassword'];
+    $email = trim($_POST['email']);
+
+    // Validate passwords match
+    if ($password !== $repeatPassword) {
+        echo "<script>alert('Passwords do not match');</script>";
+    } else {
+        // Check if username or email already exists
+        $checkStmt = $conn->prepare("SELECT COUNT(*) AS count FROM student WHERE username = ? OR email = ?");
+        $checkStmt->bind_param("ss", $username, $email);
+        $checkStmt->execute();
+        $checkResult = $checkStmt->get_result();
+        $row = $checkResult->fetch_assoc();
+        if ($row['count'] > 0) {
+            echo "<script>alert('Username or email already exists.');</script>";
+        } else {
+            // Hash the password before storing
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+            // Prepare and execute the INSERT statement using backticks for "Full Name"
+            $stmt = $conn->prepare("INSERT INTO student (`Full Name`, username, password, email) VALUES (?, ?, ?, ?)");
+            if (!$stmt) {
+                echo "<script>alert('Preparation failed: " . $conn->error . "');</script>";
+            } else {
+                $stmt->bind_param("ssss", $fullName, $username, $hashed_password, $email);
+                if ($stmt->execute()) {
+                    echo "<script>alert('Registration successful'); window.location.href='login.php';</script>";
+                    exit();
+                } else {
+                    echo "<script>alert('Error: Could not register');</script>";
+                }
+                $stmt->close();
+            }
+        }
+        $checkStmt->close();
+    }
 }
 ?>
 

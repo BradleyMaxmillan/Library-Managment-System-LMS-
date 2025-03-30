@@ -6,35 +6,20 @@ if (!isset($_SESSION["user"]) || $_SESSION["user_type"] != "admin") {
     exit();
 }
 
-include "connection.php";
-
-// Handle deletion if 'delete' parameter is set
-if (isset($_GET['delete'])) {
-    $bookId = intval($_GET['delete']);
-    $sqlDelete = "DELETE FROM books WHERE id = ?";
-    $stmtDel = $conn->prepare($sqlDelete);
-    $stmtDel->bind_param("i", $bookId);
-    if ($stmtDel->execute()) {
-        $stmtDel->close();
-        // Redirect back with a success message (optional)
-        header("Location: manage_books.php?msg=deleted");
-        exit();
-    } else {
-        echo "Error deleting record: " . $stmtDel->error;
-        exit();
-    }
-}
-
-// Fetch all books from the database
-$sql = "SELECT id, Title, Author, type, published_date FROM books ORDER BY Title ASC";
-$result = mysqli_query($conn, $sql);
+// You can fetch existing settings from your database here.
+$libraryName = "City Library";
+$libraryEmail = "info@citylibrary.com";
+$libraryPhone = "123-456-7890";
+$libraryAddress = "123 Main St, Metropolis";
+$overdueFine = "0.50"; // per day
+$notificationEmail = "admin@citylibrary.com";
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Manage Books - Library Admin</title>
+  <title>Settings - Library Management</title>
   <link rel="stylesheet" href="./css/style.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- FontAwesome Icons -->
@@ -66,7 +51,7 @@ $result = mysqli_query($conn, $sql);
       left: 0;
       bottom: 0;
       width: 250px;
-      background: rgb(0, 0, 0);
+      background: rgba(0, 0, 0, 0.8);
       padding: 20px;
       display: flex;
       flex-direction: column;
@@ -134,41 +119,32 @@ $result = mysqli_query($conn, $sql);
     .dashboard-body {
       margin-top: 100px;
     }
-    /* Table Styles */
-    .table-responsive {
-      background: transparent; /* Removed white background */
+    /* Form & Card Styles */
+    .settings-card {
+      background: rgba(0, 0, 0, 0.6);
+      border: none;
       border-radius: 12px;
       padding: 20px;
+      margin-bottom: 30px;
       box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(10px);
-      margin-bottom: 40px;
+      color: #e0e0e0;
     }
-    .table {
-      background: transparent !important; /* Ensure table is transparent */
-    }
-    .table thead th {
+    .settings-card h3 {
       color: #d4af37;
-      background: transparent !important; /* Remove header background */
+      margin-bottom: 20px;
     }
-    .table tbody td {
-      color: #d4af37;
-      background: transparent !important; /* Remove cell background */
+    .settings-card label {
+      margin-bottom: 5px;
     }
-    .action-links a {
-      margin-right: 10px;
-      color: #d4af37;
-      text-decoration: none;
+    .settings-card .form-control {
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid #d4af37;
+      color: #e0e0e0;
     }
-    .action-links a:hover {
-      text-decoration: underline;
-    }
-    /* Section Titles */
-    .section-title {
-      font-size: 28px;
-      color: #d4af37;
-      margin: 30px 0 20px;
-      border-bottom: 2px solid rgba(212, 175, 55, 0.5);
-      padding-bottom: 10px;
+    .settings-card .btn-primary {
+      background: #d4af37;
+      border: none;
     }
     /* Responsive Adjustments */
     @media (max-width: 992px) {
@@ -187,7 +163,6 @@ $result = mysqli_query($conn, $sql);
     }
     @media (max-width: 768px) {
       .sidebar {
-        position: fixed;
         width: 180px;
       }
       .content {
@@ -249,57 +224,73 @@ $result = mysqli_query($conn, $sql);
   <!-- Content Area -->
   <div class="content">
     <header>
-      <h1>Manage Books</h1>
+      <h1>Settings</h1>
       <div>
-        <a href="./books/insert_books.php" class="btn btn-primary"><i class="fas fa-plus"></i> Add New Book</a>
+        <span>Welcome, Admin!</span>
       </div>
     </header>
+    
     <div class="dashboard-body">
-      <?php if(isset($_GET['msg']) && $_GET['msg'] == 'deleted'): ?>
-        <div class="alert alert-success">Book deleted successfully.</div>
-      <?php endif; ?>
-      <h2 class="section-title">Book List</h2>
-      <div class="table-responsive">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Title</th>
-              <th>Author</th>
-              <th>Type</th>
-              <th>Published</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php 
-            // Initialize counter variable
-            $counter = 1;
-            if($result && mysqli_num_rows($result) > 0): 
-              while($row = mysqli_fetch_assoc($result)): 
-            ?>
-                <tr>
-                  <td><?php echo $counter++; ?></td>
-                  <td><?php echo htmlspecialchars($row['Title']); ?></td>
-                  <td><?php echo htmlspecialchars($row['Author']); ?></td>
-                  <td><?php echo htmlspecialchars($row['type']); ?></td>
-                  <td><?php echo htmlspecialchars($row['published_date']); ?></td>
-                  <td class="action-links">
-                    <a href="edit_book.php?id=<?php echo $row['id']; ?>"><i class="fas fa-edit"></i> Edit</a>
-                    <a href="manage_books.php?delete=<?php echo $row['id']; ?>" onclick="return confirm('Are you sure you want to delete this book?');"><i class="fas fa-trash-alt"></i> Delete</a>
-                  </td>
-                </tr>
-            <?php 
-              endwhile; 
-            else: 
-            ?>
-              <tr>
-                <td colspan="6" class="text-center">No books found.</td>
-              </tr>
-            <?php endif; ?>
-          </tbody>
-        </table>
+      <!-- General Library Information -->
+      <div class="settings-card">
+        <h3>General Library Information</h3>
+        <form action="update_settings.php" method="post">
+          <div class="mb-3">
+            <label for="libraryName" class="form-label">Library Name</label>
+            <input type="text" class="form-control" id="libraryName" name="libraryName" value="<?php echo htmlspecialchars($libraryName); ?>" required>
+          </div>
+          <div class="mb-3">
+            <label for="libraryEmail" class="form-label">Contact Email</label>
+            <input type="email" class="form-control" id="libraryEmail" name="libraryEmail" value="<?php echo htmlspecialchars($libraryEmail); ?>" required>
+          </div>
+          <div class="mb-3">
+            <label for="libraryPhone" class="form-label">Phone Number</label>
+            <input type="text" class="form-control" id="libraryPhone" name="libraryPhone" value="<?php echo htmlspecialchars($libraryPhone); ?>" required>
+          </div>
+          <div class="mb-3">
+            <label for="libraryAddress" class="form-label">Address</label>
+            <input type="text" class="form-control" id="libraryAddress" name="libraryAddress" value="<?php echo htmlspecialchars($libraryAddress); ?>" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Update Library Info</button>
+        </form>
       </div>
+      
+      <!-- Fine & Notification Settings -->
+      <div class="settings-card">
+        <h3>Fine & Notification Settings</h3>
+        <form action="update_settings.php" method="post">
+          <div class="mb-3">
+            <label for="overdueFine" class="form-label">Overdue Fine (per day)</label>
+            <input type="text" class="form-control" id="overdueFine" name="overdueFine" value="<?php echo htmlspecialchars($overdueFine); ?>" required>
+          </div>
+          <div class="mb-3">
+            <label for="notificationEmail" class="form-label">Notification Email</label>
+            <input type="email" class="form-control" id="notificationEmail" name="notificationEmail" value="<?php echo htmlspecialchars($notificationEmail); ?>" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Update Fine/Notification</button>
+        </form>
+      </div>
+      
+      <!-- Account Settings -->
+      <div class="settings-card">
+        <h3>Account Settings</h3>
+        <form action="update_settings.php" method="post">
+          <div class="mb-3">
+            <label for="currentPassword" class="form-label">Current Password</label>
+            <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+          </div>
+          <div class="mb-3">
+            <label for="newPassword" class="form-label">New Password</label>
+            <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+          </div>
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Confirm New Password</label>
+            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Update Password</button>
+        </form>
+      </div>
+      
     </div>
   </div>
   

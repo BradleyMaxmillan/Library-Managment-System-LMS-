@@ -8,16 +8,15 @@ if (!isset($_SESSION["user"]) || $_SESSION["user_type"] != "admin") {
 
 include "connection.php";
 
-// Handle deletion if 'delete' parameter is set
+// Handle deletion using regno as the unique identifier
 if (isset($_GET['delete'])) {
-    $bookId = intval($_GET['delete']);
-    $sqlDelete = "DELETE FROM books WHERE id = ?";
+    $studentRollNo = $_GET['delete']; // Assuming regno is a string; change to "i" if it's an integer.
+    $sqlDelete = "DELETE FROM student WHERE `Roll No` = ?";
     $stmtDel = $conn->prepare($sqlDelete);
-    $stmtDel->bind_param("i", $bookId);
+    $stmtDel->bind_param("s", $studentRollNo);
     if ($stmtDel->execute()) {
         $stmtDel->close();
-        // Redirect back with a success message (optional)
-        header("Location: manage_books.php?msg=deleted");
+        header("Location: manage_users.php?msg=deleted");
         exit();
     } else {
         echo "Error deleting record: " . $stmtDel->error;
@@ -25,8 +24,10 @@ if (isset($_GET['delete'])) {
     }
 }
 
-// Fetch all books from the database
-$sql = "SELECT id, Title, Author, type, published_date FROM books ORDER BY Title ASC";
+// Fetch all records from the student table using lowercase column names
+$sql = "SELECT  `username`, `email`, `Roll No` 
+        FROM student 
+        ORDER BY `Roll No` DESC";
 $result = mysqli_query($conn, $sql);
 ?>
 <!DOCTYPE html>
@@ -34,7 +35,7 @@ $result = mysqli_query($conn, $sql);
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Manage Books - Library Admin</title>
+  <title>Manage Users - Library Management</title>
   <link rel="stylesheet" href="./css/style.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- FontAwesome Icons -->
@@ -53,20 +54,15 @@ $result = mysqli_query($conn, $sql);
       background: rgba(0, 0, 0, 0.85);
       filter: blur(8px);
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: 0; left: 0; right: 0; bottom: 0;
       z-index: -1;
     }
     /* Sidebar */
     .sidebar {
       position: fixed;
-      top: 0;
-      left: 0;
-      bottom: 0;
+      top: 0; left: 0; bottom: 0;
       width: 250px;
-      background: rgb(0, 0, 0);
+      background: rgba(0, 0, 0, 0.8);
       padding: 20px;
       display: flex;
       flex-direction: column;
@@ -134,9 +130,16 @@ $result = mysqli_query($conn, $sql);
     .dashboard-body {
       margin-top: 100px;
     }
-    /* Table Styles */
+    /* Section Titles & Table */
+    .section-title {
+      font-size: 28px;
+      color: #d4af37;
+      margin: 30px 0 20px;
+      border-bottom: 2px solid rgba(212, 175, 55, 0.5);
+      padding-bottom: 10px;
+    }
     .table-responsive {
-      background: transparent; /* Removed white background */
+      background: transparent;
       border-radius: 12px;
       padding: 20px;
       box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
@@ -144,31 +147,15 @@ $result = mysqli_query($conn, $sql);
       margin-bottom: 40px;
     }
     .table {
-      background: transparent !important; /* Ensure table is transparent */
+      background: transparent !important;
     }
     .table thead th {
       color: #d4af37;
-      background: transparent !important; /* Remove header background */
+      background: transparent !important;
     }
     .table tbody td {
-      color: #d4af37;
-      background: transparent !important; /* Remove cell background */
-    }
-    .action-links a {
-      margin-right: 10px;
-      color: #d4af37;
-      text-decoration: none;
-    }
-    .action-links a:hover {
-      text-decoration: underline;
-    }
-    /* Section Titles */
-    .section-title {
-      font-size: 28px;
-      color: #d4af37;
-      margin: 30px 0 20px;
-      border-bottom: 2px solid rgba(212, 175, 55, 0.5);
-      padding-bottom: 10px;
+      color: #e0e0e0;
+      background: transparent !important;
     }
     /* Responsive Adjustments */
     @media (max-width: 992px) {
@@ -187,7 +174,6 @@ $result = mysqli_query($conn, $sql);
     }
     @media (max-width: 768px) {
       .sidebar {
-        position: fixed;
         width: 180px;
       }
       .content {
@@ -242,59 +228,60 @@ $result = mysqli_query($conn, $sql);
       <li><a href="settings.php"><i class="fas fa-cog"></i> Settings</a></li>
     </ul>
     <div class="logout-btn">
-      <a href="logout.php" class="btn btn-primary w-100"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      <a href="logout.php" class="btn btn-primary w-100">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
     </div>
   </div>
   
-  <!-- Content Area -->
+  <!-- Main Content Area -->
   <div class="content">
     <header>
-      <h1>Manage Books</h1>
+      <h1>Manage Users</h1>
       <div>
-        <a href="./books/insert_books.php" class="btn btn-primary"><i class="fas fa-plus"></i> Add New Book</a>
+        <a href="insert_user.php" class="btn btn-primary">
+          <i class="fas fa-user-plus"></i> Add New User
+        </a>
       </div>
     </header>
+    
     <div class="dashboard-body">
-      <?php if(isset($_GET['msg']) && $_GET['msg'] == 'deleted'): ?>
-        <div class="alert alert-success">Book deleted successfully.</div>
+      <?php if (isset($_GET['msg']) && $_GET['msg'] == 'deleted'): ?>
+        <div class="alert alert-success">User deleted successfully.</div>
       <?php endif; ?>
-      <h2 class="section-title">Book List</h2>
+      
+      <h2 class="section-title">User List</h2>
       <div class="table-responsive">
         <table class="table table-hover">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Title</th>
-              <th>Author</th>
-              <th>Type</th>
-              <th>Published</th>
+            <th>Roll No</th>
+              <th>Username</th>
+              <th>Email</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <?php 
-            // Initialize counter variable
-            $counter = 1;
-            if($result && mysqli_num_rows($result) > 0): 
-              while($row = mysqli_fetch_assoc($result)): 
-            ?>
+            <?php if ($result && mysqli_num_rows($result) > 0): ?>
+              <?php while ($row = mysqli_fetch_assoc($result)): ?>
                 <tr>
-                  <td><?php echo $counter++; ?></td>
-                  <td><?php echo htmlspecialchars($row['Title']); ?></td>
-                  <td><?php echo htmlspecialchars($row['Author']); ?></td>
-                  <td><?php echo htmlspecialchars($row['type']); ?></td>
-                  <td><?php echo htmlspecialchars($row['published_date']); ?></td>
-                  <td class="action-links">
-                    <a href="edit_book.php?id=<?php echo $row['id']; ?>"><i class="fas fa-edit"></i> Edit</a>
-                    <a href="manage_books.php?delete=<?php echo $row['id']; ?>" onclick="return confirm('Are you sure you want to delete this book?');"><i class="fas fa-trash-alt"></i> Delete</a>
+                <td><?php echo htmlspecialchars($row['Roll No']); ?></td>
+                  <td><?php echo htmlspecialchars($row['username']); ?></td>
+                  <td><?php echo htmlspecialchars($row['email']); ?></td>
+                  <td>
+                    <a href="edit_user.php?regno=<?php echo urlencode($row['Roll No']); ?>" class="text-warning">
+                      <i class="fas fa-edit"></i> Edit
+                    </a> <br>
+                    <a href="manage_users.php?delete=<?php echo urlencode($row['Roll No']); ?>" class="text-danger"
+                       onclick="return confirm('Are you sure you want to delete this user?');">
+                      <i class="fas fa-trash-alt"></i> Delete
+                    </a>
                   </td>
                 </tr>
-            <?php 
-              endwhile; 
-            else: 
-            ?>
+              <?php endwhile; ?>
+            <?php else: ?>
               <tr>
-                <td colspan="6" class="text-center">No books found.</td>
+                <td colspan="7" class="text-center">No users found.</td>
               </tr>
             <?php endif; ?>
           </tbody>
