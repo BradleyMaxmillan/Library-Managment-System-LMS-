@@ -62,11 +62,11 @@ $result = mysqli_query($conn, $sql);
     /* Sidebar */
     .sidebar {
       position: fixed;
-      top: 0;
+      top: 70px;
       left: 0;
       bottom: 0;
       width: 250px;
-      background: rgb(0, 0, 0);
+      background: rgba(0, 0, 0, 0.8);
       padding: 20px;
       display: flex;
       flex-direction: column;
@@ -74,6 +74,7 @@ $result = mysqli_query($conn, $sql);
       overflow-y: auto;
       transition: all 0.3s ease;
     }
+
     .sidebar .logo {
       font-size: 24px;
       font-weight: bold;
@@ -114,12 +115,11 @@ $result = mysqli_query($conn, $sql);
       transition: margin-left 0.3s ease;
     }
     .content header {
-      position: fixed;
       top: 0;
       left: 250px;
       right: 0;
       padding: 20px 40px;
-      background: rgb(0, 0, 0);
+
       z-index: 10;
       display: flex;
       justify-content: space-between;
@@ -230,6 +230,7 @@ $result = mysqli_query($conn, $sql);
 </head>
 <body>
   <div class="overlay"></div>
+  <?php include "navbar.php" ?>
   
   <!-- Sidebar -->
   <div class="sidebar">
@@ -237,9 +238,9 @@ $result = mysqli_query($conn, $sql);
     <ul>
       <li><a href="admin_dashboard.php"><i class="fas fa-home"></i> Dashboard</a></li>
       <li><a href="manage_books.php"><i class="fas fa-book"></i> Manage Books</a></li>
-      <li><a href="manage_users.php"><i class="fas fa-users"></i> Manage Users</a></li>
-      <li><a href="reports.php"><i class="fas fa-chart-bar"></i> Reports</a></li>
-      <li><a href="settings.php"><i class="fas fa-cog"></i> Settings</a></li>
+      <!-- <li><a href="manage_users.php"><i class="fas fa-users"></i> Manage Users</a></li> -->
+      <!-- <li><a href="reports.php"><i class="fas fa-chart-bar"></i> Reports</a></li>
+      <li><a href="settings.php"><i class="fas fa-cog"></i> Settings</a></li> -->
     </ul>
     <div class="logout-btn">
       <a href="logout.php" class="btn btn-primary w-100"><i class="fas fa-sign-out-alt"></i> Logout</a>

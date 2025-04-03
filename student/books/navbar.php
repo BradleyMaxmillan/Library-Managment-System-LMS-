@@ -44,15 +44,13 @@
     .offcanvas.offcanvas-end {
       background: rgba(23, 23, 23, 0.5); /* Semi-transparent background */
       backdrop-filter: blur(8px);   /* Blur effect */
-      border: none;
-	                /* Remove any default border */
+      border: none; /* Remove any default border */
     }
-	
   </style>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark  fixed-top" style=" background: rgba(18, 18, 18, 0.92); ">
-    <div class="container-fluid ">
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background: rgba(18, 18, 18, 0.92);">
+    <div class="container-fluid">
       <a class="navbar-brand" href="#">
         <i class="fa-solid fa-book me-2"></i>Online Library
       </a>
@@ -79,6 +77,12 @@
           <li class="nav-item">
             <a class="nav-link" href="../feedback.php">
               <i class="fa-solid fa-comment me-1"></i> Feedback
+            </a>
+          </li>
+          <!-- Admin Link -->
+          <li class="nav-item">
+            <a class="nav-link" href="../admin_dashboard.php">
+              <i class="fa-solid fa-user-shield me-1"></i> Admin
             </a>
           </li>
           <!-- Profile Dropdown -->
@@ -131,6 +135,12 @@
             <li class="nav-item">
               <a class="nav-link" href="../feedback.php">
                 <i class="fa-solid fa-comment me-1"></i> Feedback
+              </a>
+            </li>
+            <!-- Admin Link -->
+            <li class="nav-item">
+              <a class="nav-link" href="../admin_dashboard.php">
+                <i class="fa-solid fa-user-shield me-1"></i> Admin
               </a>
             </li>
             <!-- Profile Dropdown within Offcanvas -->

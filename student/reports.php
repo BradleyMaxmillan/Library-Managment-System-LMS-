@@ -128,6 +128,7 @@ $reportData = [
 </head>
 <body>
   <div class="overlay"></div>
+  <?php include "navbar.php" ?>
   
   <!-- Sidebar -->
   <div class="sidebar">

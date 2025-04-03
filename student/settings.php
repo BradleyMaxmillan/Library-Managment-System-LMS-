@@ -213,8 +213,8 @@ $notificationEmail = "admin@citylibrary.com";
       <li><a href="admin_dashboard.php"><i class="fas fa-home"></i> Dashboard</a></li>
       <li><a href="manage_books.php"><i class="fas fa-book"></i> Manage Books</a></li>
       <li><a href="manage_users.php"><i class="fas fa-users"></i> Manage Users</a></li>
-      <li><a href="reports.php"><i class="fas fa-chart-bar"></i> Reports</a></li>
-      <li><a href="settings.php"><i class="fas fa-cog"></i> Settings</a></li>
+      <!-- <li><a href="reports.php"><i class="fas fa-chart-bar"></i> Reports</a></li>
+      <li><a href="settings.php"><i class="fas fa-cog"></i> Settings</a></li> -->
     </ul>
     <div class="logout-btn">
       <a href="logout.php" class="btn btn-primary w-100"><i class="fas fa-sign-out-alt"></i> Logout</a>

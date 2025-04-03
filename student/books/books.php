@@ -42,7 +42,7 @@ $trendingRes = mysqli_query($conn, $trendingSql);
       min-height: 100vh;
     }
     .overlay {
-      background: rgba(0, 0, 0, 0.75);
+      background: rgba(22, 22, 22);
       position: fixed;
       top: 0;
       left: 0;
@@ -159,10 +159,9 @@ $trendingRes = mysqli_query($conn, $trendingSql);
       color: #ffd700;
     }
 
-    /* Redesigned Spotlight Slider */
     .book-spotlight {
       margin-bottom: 30px;
-      background-color: #000; /* So the main page background isn't visible */
+      background: black;
       color: #fff;
     }
     .carousel-item {
@@ -173,7 +172,6 @@ $trendingRes = mysqli_query($conn, $trendingSql);
       justify-content: center;
       padding: 2rem 1rem;
     }
-    /* We'll use a container to center everything nicely */
     .spotlight-container {
       display: flex;
       flex-direction: row;
@@ -247,6 +245,7 @@ $trendingRes = mysqli_query($conn, $trendingSql);
     .carousel-control-prev-icon,
     .carousel-control-next-icon {
       filter: invert(1);
+  
     }
 
     /* Trending Section */
@@ -329,7 +328,7 @@ $trendingRes = mysqli_query($conn, $trendingSql);
     </div>
     <!-- Carousel Controls -->
     <button class="carousel-control-prev" type="button" data-bs-target="#bookSpotlightCarousel" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="carousel-control-prev-icon" aria-hidden="false"></span>
       <span class="visually-hidden">Previous</span>
     </button>
     <button class="carousel-control-next" type="button" data-bs-target="#bookSpotlightCarousel" data-bs-slide="next">
